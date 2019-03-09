@@ -31,27 +31,25 @@ var trainInfo = [
   }
 ]
 
-trainInfo.forEach(function(train) {
+// here's how to handle the add button
+function addTrainObj(name, destination, first, frequency) {
   database.ref().push({
-    trainName: train.trainName,
-    destination: train.destination,
-    firstTime: train.firstTime,
-    frequency: train.frequency
+    trainName: name,
+    destination: destination,
+    firstTime: first,
+    frequency: frequency
   })
-})
+}
 
-function addTrainObj(id, trainName, destination, firstTime, frequency) {
-
+function renderTrainObj(id, trainName, destination, firstTime, frequency) {
   var trainObj = $('<div>').addClass('trainRow');
   trainObj.attr('id', id);
   trainObj.text(trainName + ' ' + destination + ' ' + firstTime + ' ' + frequency);
-  
-  $('#trainSchedule').append(trainObj)
-
+  $('#trains').append(trainObj)
 }
 
 database.ref().on("child_added", function(childSnapshot) {
-  addTrainObj(
+  renderTrainObj(
     childSnapshot.key,
     childSnapshot.val().trainName,
     childSnapshot.val().destination,
@@ -60,3 +58,21 @@ database.ref().on("child_added", function(childSnapshot) {
   )
 })
 
+database.ref().on("child_changed", function(childSnapshot) {
+  console.log(childSnapshot)
+})
+
+$('#train-add').click(function(e) {
+  e.preventDefault()
+  var trainName = $('#train-name').val().trim();
+  var trainDestination = $('#train-destination').val().trim()
+  var trainFirstTime = $('#train-first-time').val();
+  var trainFrequency = $('#train-frequency').val();
+  addTrainObj(trainName, trainDestination, trainFirstTime, trainFrequency);
+
+  $('#train-name').val('');
+  $('#train-destination').val('');
+  $('#train-first-time').val('');
+  $('#train-frequency').val('');
+
+})

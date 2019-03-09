@@ -9,7 +9,14 @@
 <body>
   <div class="wrapper">
     <div id="trainSchedule">
-      
+      <div id="trains"></div>
+      <form id="trainAdd">
+        <input id="train-name" type="text" placeholder="Train Name" autocomplete="off">
+        <input id="train-destination" type="text" placeholder="Destination">
+        <input id="train-first-time" type="time">
+        <input id="train-frequency" type="number" placeholder="Frequency">
+        <button id="train-add">+</button>
+      </form>
     </div>
   </div>
   <script
