@@ -40,3 +40,23 @@ trainInfo.forEach(function(train) {
   })
 })
 
+function addTrainObj(id, trainName, destination, firstTime, frequency) {
+
+  var trainObj = $('<div>').addClass('trainRow');
+  trainObj.attr('id', id);
+  trainObj.text(trainName + ' ' + destination + ' ' + firstTime + ' ' + frequency);
+  
+  $('#trainSchedule').append(trainObj)
+
+}
+
+database.ref().on("child_added", function(childSnapshot) {
+  addTrainObj(
+    childSnapshot.key,
+    childSnapshot.val().trainName,
+    childSnapshot.val().destination,
+    childSnapshot.val().firstTime,
+    childSnapshot.val().frequency
+  )
+})
+
