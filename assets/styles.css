@@ -17,9 +17,18 @@
 }
 
 .trainRow > div, .trainRowHeader > div {
-  padding: 10px;
+  padding: 20px;
   flex: 1;
   text-align: left;
+}
+
+.trainRow:nth-of-type(odd) {
+  background-color: #e2e2e2;
+}
+
+.editSettings {
+  max-width: 60px;
+  flex: 0;
 }
 
 input {
