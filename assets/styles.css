@@ -1,0 +1,29 @@
+.trainSchedule {
+  width: 100%;
+}
+
+.trainRow  {
+  display: flex;
+  justify-content: space-between;
+}
+
+.trainRow > div {
+  padding: 10px;
+}
+
+input {
+  padding: 10px;
+}
+
+button {
+  padding: 10px 12px;
+  background: gray;
+  border: solid 1px gray;
+  border-radius: 8px;
+  color: white;
+  display: inline-block;
+}
+
+button:focus {
+  outline: none;
+}

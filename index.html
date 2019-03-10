@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Train Scheduler</title>
+  <link href="./assets/styles.css" rel="stylesheet">
 </head>
 <body>
   <div class="wrapper">
@@ -13,7 +14,7 @@
       <form id="trainAdd">
         <input id="train-name" type="text" placeholder="Train Name" autocomplete="off">
         <input id="train-destination" type="text" placeholder="Destination">
-        <input id="train-first-time" type="time">
+        <input id="train-first-time" type="text" placeholder="Time HH:MM">
         <input id="train-frequency" type="number" placeholder="Frequency">
         <button id="train-add">+</button>
       </form>
@@ -24,6 +25,7 @@
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="./assets/app.js"></script>
 </body>
 </html>
