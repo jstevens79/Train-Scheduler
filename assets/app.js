@@ -1,3 +1,5 @@
+
+
 var config = {
   apiKey: "AIzaSyDSojtlXJJJCZMfGg_0sCqIMGTtinJrMhA",
   authDomain: "fir-test-1aa59.firebaseapp.com",
@@ -10,7 +12,33 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var currentLoaded = []
+
+///////////////// HANDLE TIME ///////////////// 
+
+var currentTime = moment().format("hh:mm");
+
+// get current time
+function getTime(){
+  var current = moment().format("hh:mm");
+
+  if (currentTime !== current) {
+    currentTime = current;
+    
+    // update the train rows
+    $('.trainRow').each(function() {
+      var frequency = $(this).data('frequency');
+      var firstTime = $(this).data('first-time');
+      var trainTimes = updateTrainArrival(frequency, firstTime, current);
+      $(this).find('.nextArrival').text(trainTimes.nextArrival);
+      $(this).find('.minutesAway').text(trainTimes.minutesAway);
+    })
+
+  }
+}
+
+getTime()
+var timeInterval = setInterval(getTime, 500); // to be a little more accurate to the second
+
 
 // here's how to handle the add button
 function addTrainObj(name, destination, first, frequency) {
@@ -23,13 +51,17 @@ function addTrainObj(name, destination, first, frequency) {
 }
 
 function renderTrainObj(id, trainName, destination, firstTime, frequency) {
+  var trainTimes = updateTrainArrival(frequency, firstTime, currentTime);
   var trainObj = $('<div>').addClass('trainRow');
   trainObj.attr('id', id);
+  trainObj.attr('data-frequency', frequency);
+  trainObj.attr('data-first-time', firstTime);
   var tName = $('<div>').addClass('trainName').text(trainName);
   var tDestination = $('<div>').addClass('trainDestination').text(destination);
-  var tFirstTime = $('<div>').addClass('trainFirstTime').text(firstTime);
   var tFrequency = $('<div>').addClass('trainFrequency').text(frequency);
-  trainObj.append(tName, tDestination, tFirstTime, tFrequency);
+  var nextArrival = $('<div>').addClass('nextArrival').text(trainTimes.nextArrival);
+  var minutesAway = $('<div>').addClass('minutesAway').text(trainTimes.minutesAway);
+  trainObj.append(tName, tDestination, tFrequency, nextArrival, minutesAway);
   $('#trains').append(trainObj)
 }
 
@@ -62,44 +94,16 @@ $('#train-add').click(function(e) {
 
 })
 
-var currentMinutes = null;
-var currentHour = null;
-// get current time
-function getTime(){
-  var currentTime = moment();
-  currentTime = moment(currentTime).format("hh:mm");
-  var minutes = moment().minutes();
-  //var hour = moment().hours();
 
-  if (currentMinutes !== minutes) {
-    currentMinutes = minutes
-    console.log(currentMinutes)
-  }
 
-}
 
-getTime()
-var timeInterval = setInterval(getTime, 500); // to be a little more accurate to the second
-
+// need to do this for each of the trains
 function updateTrainArrival(freq, first, currentHour) {
-  //var tFrequency = 17;
-  //var firstTime = "03:00";
-
   var firstTimeConverted = moment(first, "HH:mm").subtract(1, "years");
-
-  // Difference between the times
   var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-
-  // Time apart (remainder)
   var tRemainder = diffTime % freq;
-
-  // Minute Until Train
   var tMinutesTillTrain = freq - tRemainder;
-  console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
-
-  // Next Train
   var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-  console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-
+  return {nextArrival: moment(nextTrain).format("hh:mm"), minutesAway: tMinutesTillTrain}
 }
 

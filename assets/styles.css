@@ -2,13 +2,24 @@
   width: 100%;
 }
 
-.trainRow  {
+#trains {
+  width: 100%;
+}
+
+.trainRowHeader {
+  border-bottom: solid 1px gray;
+  font-weight: bold;
+}
+
+.trainRow, .trainRowHeader  {
   display: flex;
   justify-content: space-between;
 }
 
-.trainRow > div {
+.trainRow > div, .trainRowHeader > div {
   padding: 10px;
+  flex: 1;
+  text-align: left;
 }
 
 input {
