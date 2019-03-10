@@ -14,10 +14,10 @@
 .trainRow, .trainRowHeader  {
   display: flex;
   justify-content: space-between;
+  padding: 20px;
 }
 
 .trainRow > div, .trainRowHeader > div {
-  padding: 20px;
   flex: 1;
   text-align: left;
 }

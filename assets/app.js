@@ -94,7 +94,6 @@ database.ref().on("child_removed", function(oldChildSnapshot) {
 })
 
 database.ref().on("child_changed", function(childSnapshot) {
-  // re-render the updated row
   renderTrainObj(
     childSnapshot.key,
     childSnapshot.val().trainName,
@@ -132,11 +131,46 @@ function updateTrainArrival(freq, first, currentHour) {
 
 $(document).on('click', '.edit', function() {
   var myKey = $(this).data('key');
-  var myRecord = database.ref(myKey);
   
-  myRecord.update({frequency: 5})
+  database.ref(myKey).once('value').then(function(snapshot) {
+    var nameForm = $('<input>').attr('id', 'updateName').attr('placeholder', snapshot.val().trainName);
+    var destForm = $('<input>').attr('id', 'updateDest').attr('placeholder', snapshot.val().destination);
+    var startForm = $('<input>').attr('id', 'updateStart').attr('placeholder', snapshot.val().firstTime);
+    var freqForm = $('<input>').attr('id', 'updateFreq').attr('placeholder', snapshot.val().frequency);
+    var update = $('<button>').addClass('update').attr('data-key', myKey).text('Update');
+    $('#' + myKey).empty().append(nameForm, destForm, startForm, freqForm, update);  
+  });
+
+
+  // myRecord.update({frequency: 5})
   // to remove...
   //myRecord.remove()
+  //console.log(myRecord.val().trainName)  
 
+  // 
 
+})
+
+$(document).on('click', '.update', function() {
+  var myKey = $(this).data('key');
+  var valsToUpdate = {};
+
+  if ($('#updateName').val() !== '') {
+    valsToUpdate.trainName = $('#updateName').val().trim()
+  }
+
+  if ($('#updateDest').val() !== '') {
+    valsToUpdate.destination = $('#updateDest').val().trim()
+  }
+
+  if ($('#updateStart').val() !== '') {
+    valsToUpdate.firstTime = $('#updateStart').val().trim()
+  }
+
+  if ($('#updateFreq').val() !== '') {
+    valsToUpdate.frequency = $('#updateFreq').val().trim()
+  }
+
+  database.ref(myKey).update(valsToUpdate);
+  
 })
