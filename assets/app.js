@@ -69,8 +69,10 @@ function renderTrainObj(id, trainName, destination, firstTime, frequency, update
   var tFrequency = $('<div>').addClass('trainFrequency').text(frequency);
   var nextArrival = $('<div>').addClass('nextArrival').text(trainTimes.nextArrival);
   var minutesAway = $('<div>').addClass('minutesAway').text(trainTimes.minutesAway);
-  var edit = $('<div>').addClass('editSettings').append('<button class="edit" data-key="' + id + '">Edit</button>');
-  trainObj.append(tName, tDestination, tFrequency, nextArrival, minutesAway, edit);
+  var editButton = $('<button>').addClass('edit').attr('data-key', id).text('edit');
+  var deleteButton = $('<button>').addClass('delete').attr('data-key', id).text('delete');
+  var settings = $('<div>').addClass('editSettings').append(editButton, deleteButton);
+  trainObj.append(tName, tDestination, tFrequency, nextArrival, minutesAway, settings);
 
   if (!update) {
     $('#trains').append(trainObj);
@@ -141,14 +143,11 @@ $(document).on('click', '.edit', function() {
     $('#' + myKey).empty().append(nameForm, destForm, startForm, freqForm, update);  
   });
 
+})
 
-  // myRecord.update({frequency: 5})
-  // to remove...
-  //myRecord.remove()
-  //console.log(myRecord.val().trainName)  
-
-  // 
-
+$(document).on('click', '.delete', function() {
+  var myKey = $(this).data('key');
+  database.ref(myKey).remove();
 })
 
 $(document).on('click', '.update', function() {
