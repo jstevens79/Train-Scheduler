@@ -1,18 +1,3 @@
-
-
-var config = {
-  apiKey: "AIzaSyDSojtlXJJJCZMfGg_0sCqIMGTtinJrMhA",
-  authDomain: "fir-test-1aa59.firebaseapp.com",
-  databaseURL: "https://fir-test-1aa59.firebaseio.com",
-  projectId: "fir-test-1aa59",
-  storageBucket: "fir-test-1aa59.appspot.com",
-  messagingSenderId: "417579575390"
-};
-firebase.initializeApp(config);
-
-var database = firebase.database();
-
-
 ///////////////// HANDLE TIME ///////////////// 
 
 var currentTime = moment().format("hh:mm");
@@ -39,6 +24,8 @@ function getTime(){
 getTime()
 var timeInterval = setInterval(getTime, 500);
 
+
+///////////////// GENERATE FORM /////////////////
 function renderForm(key, tName, tDest, tFirst, tFreq) {
   var nameContainer = $('<div>').addClass('formGroup');
   var nameInput = $('<input>').attr('id', 'name-' + key);
@@ -58,15 +45,24 @@ function renderForm(key, tName, tDest, tFirst, tFreq) {
   var freqContainer = $('<div>').addClass('formGroup');
   var freqInput = $('<input>').attr('id', 'freq-' + key);
   freqInput.attr('placeholder', tFreq);
-  freqContainer.append('<label>Train Frequency (hh:mm)</label>', freqInput);
+  freqContainer.append('<label>Train Frequency (min)</label>', freqInput);
 
   var submitBttn = $('<button>').attr('data-key', key).addClass('update').html('<i class="far fa-save"></i><span>Save</span>');
   var cancelBttn = $('<button>').attr('data-key', key).addClass('cancel').html('<i class="fas fa-times"></i><span>Cancel</span>');
   var trainForm = $('<form>').addClass('inputForm');
 
-  trainForm.append(nameContainer, destContainer, firstTimeContainer, freqContainer, submitBttn, cancelBttn);
+  var column1 = $('<div>').addClass('formColumn');
+  column1.append(nameContainer, destContainer);
+  var column2 = $('<div>').addClass('formColumn');
+  column2.append(firstTimeContainer, freqContainer);
+
+  var controls = $('<div>').addClass('formControls');
+  controls.append(submitBttn, cancelBttn);
+
+  trainForm.append(column1, column2, controls);
   return trainForm;
 }
+
 
 function renderTrainObj(id, trainName, destination, firstTime, frequency) {
   var trainTimes = updateTrainArrival(frequency, firstTime, currentTime);
@@ -92,39 +88,6 @@ $('#add-train').click(function() {
 });
 
 
-database.ref().on("child_added", function(childSnapshot) {
-  var trainObj = $('<div>').addClass('trainRow').attr('id', childSnapshot.key);
-  if (childSnapshot.val().initiated) {
-    trainObj.attr('data-frequency', childSnapshot.val().frequency);
-    trainObj.attr('data-first-time', childSnapshot.val().firstTime);
-    trainObj.html(renderTrainObj(
-      childSnapshot.key,
-      childSnapshot.val().trainName,
-      childSnapshot.val().destination,
-      childSnapshot.val().firstTime,
-      childSnapshot.val().frequency
-    ))
-  } else {
-    trainObj.html(renderForm(childSnapshot.key))
-  }
-  
-  $('#trains').append(trainObj);
-})
-
-database.ref().on("child_changed", function(childSnapshot) {
-  $('#' + childSnapshot.key).html(renderTrainObj(
-    childSnapshot.key,
-    childSnapshot.val().trainName,
-    childSnapshot.val().destination,
-    childSnapshot.val().firstTime,
-    childSnapshot.val().frequency
-  ))
-})
-
-database.ref().on("child_removed", function(oldChildSnapshot) {
-  $('#' + oldChildSnapshot.key ).remove();
-})
-
 function addTrainObj(name, destination, first, frequency) {
   database.ref().push({
     trainName: name,
@@ -144,71 +107,4 @@ function updateTrainArrival(freq, first, currentHour) {
   return {nextArrival: moment(nextTrain).format("hh:mm"), minutesAway: tMinutesTillTrain}
 }
 
-// Handle additions, edits, and deletions
-$('#train-add').click(function(e) {
-  e.preventDefault()
-  var trainName = $('#train-name').val().trim();
-  var trainDestination = $('#train-destination').val().trim()
-  var trainFirstTime = $('#train-first-time').val();
-  var trainFrequency = $('#train-frequency').val();
-  addTrainObj(trainName, trainDestination, trainFirstTime, trainFrequency);
 
-  $('#train-name').val('');
-  $('#train-destination').val('');
-  $('#train-first-time').val('');
-  $('#train-frequency').val('');
-
-})
-
-$(document).on('click', '.edit', function(e) {
-  e.preventDefault();
-  var myKey = $(this).data('key');
-  
-  database.ref(myKey).once('value').then(function(snapshot) {
-    $('#' + myKey).empty().html(renderForm(
-      myKey,
-      snapshot.val().trainName,
-      snapshot.val().destination,
-      snapshot.val().firstTime,
-      snapshot.val().frequency)
-    );
-  });
-})
-
-$(document).on('click', '.delete', function(e) {
-  e.preventDefault();
-  var myKey = $(this).data('key');
-  database.ref(myKey).remove();
-})
-
-$(document).on('click', '.cancel', function(e) {
-  e.preventDefault();
-  var myKey = $(this).data('key');
-  console.log(myKey)
-})
-
-
-$(document).on('click', '.update', function(e) {
-  e.preventDefault();
-  var myKey = $(this).data('key');
-
-  var valsToUpdate = {initiated: true, lastUpdate: moment().format('x')};
-
-  if ($('#name-' + myKey).val() !== '') {
-    valsToUpdate.trainName = $('#name-' + myKey).val().trim()
-  }
-
-  if ($('#dest-' + myKey).val() !== '') {
-    valsToUpdate.destination = $('#dest-' + myKey).val().trim()
-  }
-
-  if ($('#first-' + myKey).val() !== '') {
-    valsToUpdate.firstTime = $('#first-' + myKey).val().trim()
-  }
-
-  if ($('#freq-' + myKey).val() !== '') {
-    valsToUpdate.frequency = $('#freq-' + myKey).val().trim()
-  }
-
-  database.ref(myKey).update(valsToUpdate);  
-})

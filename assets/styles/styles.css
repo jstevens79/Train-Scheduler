@@ -1,23 +1,25 @@
 
-html {
+html, body {
   width: 100%;
   height: 100%;
 }
 
 body {
-  width: 100%;
-  height: 100%;
   background: url('../images/train-bg.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   font-family: 'Roboto Condensed', sans-serif;
   color: white;
+  font-size: 18px;
 }
 
 .wrapper {
-  background-color: rgba(8, 13, 15, 0.95);
   margin: 50px auto;
   max-width: 1024px;
+}
+
+#trainSchedule {
+  background-color: rgba(8, 13, 15, 0.95);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-left: solid 5px rgb(226, 189, 91);
@@ -25,8 +27,22 @@ body {
   padding: 10px 0 10px 0;
 }
 
-.trainSchedule {
-  width: 100%;
+.title {
+  background: linear-gradient(
+    to right, 
+    rgb(226, 189, 91) 0%, 
+    rgb(226, 189, 91) 85%,
+    rgb(2,133,147) 85%,
+    rgb(2,133,147) 95%, 
+    rgb(255,255,255) 95%,
+    rgb(255,255,255) 100%
+  );
+  display: inline-block;
+  padding: 20px 60px 20px 20px;
+  font-size: 1.5em;
+  color: rgb(28,34,32);
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 #trains {
@@ -34,7 +50,6 @@ body {
 }
 
 .trainRowHeader {
-  border-bottom: solid 1px gray;
   font-weight: 700;
   background-color: rgb(8, 13, 15);
 }
@@ -66,54 +81,117 @@ body {
   flex: 1;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 
 .inputForm {
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 label {
-  font-size: 0.8em;
+  font-size: 0.7em;
+  letter-spacing: 1px;
+  text-indent: 10px;
+  width: 100%;
 }
 
 input {
   padding: 10px;
-  margin: 0 10px;
+  margin-top: 10px;
+  border: none;
+  font-size: 1em;
+  background: black;
+  color: white;
+  border-bottom: solid 2px white;
+  width: calc(100% - 20px);
+  min-width: 160px;
 }
 
-.formGroup {
-  display: flex;
-  flex: 1;
-  justify-content: stretch;
-  align-items: center;
+input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+input:focus {
+  outline: none;
 }
 
 button {
-  padding: 10px 12px;
   border: none;
   border-radius: 8px;
-  color: gray;
-  background: none;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 1em;
+  font-size: .8em;
 }
 
 button i {
   font-size: 1.4em;
 }
 
-button span {
+.formColumn {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
+}
+
+.formGroup {
+  padding: 10px 0;
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 10px;
+  text-align: left;
+}
+
+.formControls {
+  flex: 1;
+  min-width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20px;
+}
+
+.formControls button {
+  color: white;
+  background: rgb(2,133,147);
+  margin-left: 20px;
+  border: solid 1px rgba(2,133,147, 1);
+}
+
+.update, .cancel {
+  padding: 18px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formControls .cancel {
+  background: rgba(2,133,147, 0.2);
+  border: solid 1px rgba(2,133,147, 0.8);
+}
+
+.edit, .delete {
+  color: rgba(2,133,147, 0.8);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  background: none;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.update span, .cancel span {
   padding: 8px;
   font-size: .8em;
 }
 
 button:hover {
-  color: blue;
+  color: rgb(9, 169, 187);
 }
 
 button:focus {
@@ -127,4 +205,9 @@ button:focus {
   background: rgb(2,133,147);
   color: white;
   margin: 20px;
+}
+
+#add-train i {
+  font-size: 1em;
+  padding-left: 10px;
 }
