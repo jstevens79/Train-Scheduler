@@ -15,6 +15,7 @@
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  align-items: center;
 }
 
 .trainRow > div, .trainRowHeader > div {
@@ -27,21 +28,37 @@
 }
 
 .editSettings {
-  max-width: 60px;
+  max-width: 120px;
   flex: 0;
+}
+
+.inputForm {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+label {
+  font-size: 0.8em;
 }
 
 input {
   padding: 10px;
+  margin: 0 10px;
 }
 
 button {
   padding: 10px 12px;
-  background: gray;
-  border: solid 1px gray;
+  border: none;
   border-radius: 8px;
-  color: white;
+  color: gray;
   display: inline-block;
+  background: none;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+button:hover {
+  color: blue;
 }
 
 button:focus {
