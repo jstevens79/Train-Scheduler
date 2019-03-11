@@ -179,11 +179,10 @@ $(document).on('click', '.delete', function() {
 })
 
 
-
 $(document).on('click', '.update', function(e) {
   e.preventDefault();
   var myKey = $(this).data('key');
-  var valsToUpdate = {initiated: true};
+  var valsToUpdate = {initiated: true, lastUpdate: moment().format('x')};
 
   if ($('#name-' + myKey).val() !== '') {
     valsToUpdate.trainName = $('#name-' + myKey).val().trim()
