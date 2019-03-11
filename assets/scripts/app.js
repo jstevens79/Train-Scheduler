@@ -59,11 +59,12 @@ function renderForm(key, tName, tDest, tFirst, tFreq) {
   var freqInput = $('<input>').attr('id', 'freq-' + key);
   freqInput.attr('placeholder', tFreq);
   freqContainer.append('<label>Train Frequency (hh:mm)</label>', freqInput);
-  
-  var submitBttn = $('<button>').attr('data-key', key).addClass('update').text('add');
+
+  var submitBttn = $('<button>').attr('data-key', key).addClass('update').html('<i class="far fa-save"></i><span>Save</span>');
+  var cancelBttn = $('<button>').attr('data-key', key).addClass('cancel').html('<i class="fas fa-times"></i><span>Cancel</span>');
   var trainForm = $('<form>').addClass('inputForm');
 
-  trainForm.append(nameContainer, destContainer, firstTimeContainer, freqContainer, submitBttn);
+  trainForm.append(nameContainer, destContainer, firstTimeContainer, freqContainer, submitBttn, cancelBttn);
   return trainForm;
 }
 
@@ -159,7 +160,8 @@ $('#train-add').click(function(e) {
 
 })
 
-$(document).on('click', '.edit', function() {
+$(document).on('click', '.edit', function(e) {
+  e.preventDefault();
   var myKey = $(this).data('key');
   
   database.ref(myKey).once('value').then(function(snapshot) {
@@ -173,15 +175,23 @@ $(document).on('click', '.edit', function() {
   });
 })
 
-$(document).on('click', '.delete', function() {
+$(document).on('click', '.delete', function(e) {
+  e.preventDefault();
   var myKey = $(this).data('key');
   database.ref(myKey).remove();
+})
+
+$(document).on('click', '.cancel', function(e) {
+  e.preventDefault();
+  var myKey = $(this).data('key');
+  console.log(myKey)
 })
 
 
 $(document).on('click', '.update', function(e) {
   e.preventDefault();
   var myKey = $(this).data('key');
+
   var valsToUpdate = {initiated: true, lastUpdate: moment().format('x')};
 
   if ($('#name-' + myKey).val() !== '') {
@@ -200,7 +210,5 @@ $(document).on('click', '.update', function(e) {
     valsToUpdate.frequency = $('#freq-' + myKey).val().trim()
   }
 
-  database.ref(myKey).update(valsToUpdate);
-  // what if there are no changes?
-  
+  database.ref(myKey).update(valsToUpdate);  
 })
